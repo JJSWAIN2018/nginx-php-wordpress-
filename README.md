@@ -1,4 +1,5 @@
-nx-php-wordpress
+#nx-php-wordpress
+
 A Dockerfile that installs the latest wordpress, nginx, php-apc and php-fpm.
 
 NB: A big thanks to edwn who did most of the hard work on the wordpress parts!
