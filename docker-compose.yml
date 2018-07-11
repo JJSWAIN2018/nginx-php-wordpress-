@@ -1,0 +1,57 @@
+version: '2'
+services:
+  wordpress:
+    image: nginx-php-wordpress #wordpress:latest # https://hub.docker.com/_/wordpress/
+    ports:
+      - "80:80" # change ip if required
+    volumes:
+      - ./config/php.conf.uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+      - ./wp-app:/usr/share/nginx/www
+   #  - ./wp-app:/var/www/html # Full wordpress project
+      #- ./plugin-name/trunk/:/var/www/html/wp-content/plugins/plugin-name # Plugin development
+      #- ./theme-name/trunk/:/var/www/html/wp-content/themes/theme-name # Theme development
+    environment:
+      WORDPRESS_DB_HOST: localhost
+      WORDPRESS_DB_NAME: new
+      WORDPRESS_DB_USER: krishna
+      WORDPRESS_DB_PASSWORD: krishna
+    depends_on:
+      - db
+#      - redis
+    networks:
+      - wordpress-network
+#  redis:
+#    image: redis
+#    container_name: php_redis
+#    restart: always
+#    ports:
+#     - "6379:6379"
+#    volumes:
+#     - ./wp-app:/var/lib/redis/dump.rdb
+
+  db:
+   image: mysql:5.6 # https://hub.docker.com/_/mysql/ - or mariadb https://hub.docker.com/_/mariadb
+   ports:
+      - "3306:3306" # change ip if required
+  #  command: [
+  #      '--default_authentication_plugin=mysql_native_password',
+  #      '--character-set-server=utf8mb4',
+ #       '--collation-server=utf8mb4_unicode_ci'
+ #   ]
+   volumes:
+#     # - ./wp-data:/docker-entrypoint-initdb.d
+     - ./wp-data:/var/lib/mysql
+   environment:
+    MYSQL_ROOT_USER: "root"
+    MYSQL_ROOT_PASSWORD: "password"
+      # MYSQL_USER: "krishna"
+      # MYSQL_PASSWORD: "krishna"
+      # WORDPRESS_PASSWORD: "krishna"
+      # WORDPRESS_DB_NAME:  "new"
+     # MYSQL_DATABASE: wordpress
+     # MYSQL_ROOT_PASSWORD: password
+   networks:
+     - wordpress-network
+networks:
+  wordpress-network:
+      driver: bridge
